@@ -1,10 +1,9 @@
 # loop-gate: a Stop hook. During an explicit timed autonomous run it BLOCKS the
 # model from ending its turn until the clock budget is spent -- mechanically
-# enforcing the never-stop loop (you cannot quit early). This is the tooling-
-# enforced loop continuation DESIGN.md said to build "fresh against the clock-
-# driven never-stop model" if ever wanted. The release condition is TIME, not a
-# verdict file -- the deleted review-gate.ps1's fatal flaw (it gated on a file
-# nothing wrote, so it only ever hit its fail-open MAX_ITERS backstop).
+# enforcing the never-stop loop (you cannot quit early). The release condition
+# is TIME (now >= end_epoch), never a verdict file: a gate keyed on a file
+# nobody is guaranteed to write only ever hits its fail-open backstop, so the
+# budget itself is the sole ceiling this hook checks.
 #
 # SAFETY (it must never trap a session, and must never burn tokens in a tight loop):
 #   - Only active while .run_state/run.json exists (an explicit run). No run file

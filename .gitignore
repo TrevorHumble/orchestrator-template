@@ -11,7 +11,7 @@ data/
 .env
 
 # Local enforcement state, per working copy -- never commit:
-#  - .review_state/ : visual-approval evidence + commit-gate verdicts (a committed or forged verdict defeats the gate)
+#  - .review_state/ : visual-approval evidence (a committed or forged approval record defeats the gate)
 #  - .run_state/    : timed-run + loop-gate state (machine-local run.json / STOP sentinel)
 .review_state/
 .run_state/

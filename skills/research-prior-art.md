@@ -27,7 +27,7 @@ Delegate to `agents/researcher.md`. Do not improvise the research inline.
 
 ## Time box
 
-The researcher runs a bounded check (≤5 minutes of real wall-clock). It is not a deep research session. If the topic requires depth, escalate to the `deep-research` skill.
+The researcher runs a bounded check (≤5 minutes of real wall-clock). It is not a deep research session. If the topic requires more depth than that box allows, stop and report the gap to the orchestrator/owner rather than running long — per `standards/decision-heuristics.md` § "When stuck".
 
 ## Output contract
 

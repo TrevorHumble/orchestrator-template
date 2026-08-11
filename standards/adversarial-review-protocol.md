@@ -53,7 +53,7 @@ Maximum suspicion without a truth-guard produces confident garbage.
 
 **Finding-quality bar.** Every blocker or major finding states a **concrete failure scenario**: a specific input or state, and the specific wrong outcome it produces. A blocker/major that names no failure scenario is downgraded to minor/nit until its author supplies one. **Precedence carve-out:** a finding that matches a named red flag in `standards/design-philosophy.md` (cited with the pattern name and quoted evidence, per that standard) is never downgraded below major — the pattern match is its failure scenario; that standard's never-downgrade rule governs. Symmetrically, a PASS is not a bare token: it cites evidence per checklist item (the check performed and what it showed).
 
-Worked example (a real finding): "The example plan step cites `src/routes/records.js`, which does not exist — an issue author copying the pattern sends the implementer to a phantom file; the real validation logic lives in `src/services/records.js`." Scenario stated: who acts on it, and what goes wrong.
+Worked example (a real finding): "The example plan step cites `e.g. src/routes/records.js`, which does not exist — an issue author copying the pattern sends the implementer to a phantom file; the real validation logic lives in `e.g. src/services/records.js`." Scenario stated: who acts on it, and what goes wrong.
 
 Counter-example (unfalsifiable, does not survive the bar): "This section could be confusing to some readers." No input, no actor, no wrong outcome — downgrade until evidenced.
 
@@ -106,10 +106,10 @@ to the orchestrator, exercised sparingly, not to a mechanical rule.
   round-1 reviewers (above) at PR-review time whenever the change adds a new component
   (new service, route, agent, skill, standard) or makes a significant structural change —
   no owner request needed. A blocker/major finding from it takes the standard one-round
-  stop rule, the same cadence as the design-philosophy gate. This promotion to gating is an
-  owner decision, per § "Advisory-lens lifecycle" below — the owner approved making the
-  lens an automatic gate rather than requiring a further advisory trial. It is also
-  invocable on request as an additional entry point (e.g. for an opinion on an issue before
+  stop rule, the same cadence as the design-philosophy gate. The template ships the
+  architecture lens as gating by default, not as a new lens starting from ADVISORY — §
+  "Advisory-lens lifecycle" below governs any _new_ lens a project adds, not this one. It
+  is also invocable on request as an additional entry point (e.g. for an opinion on an issue before
   implementation, or a change that does not meet the automatic trigger); a finding raised
   that way, outside the automatic PR-review dispatch, is advisory and is fixed, dropped,
   or deferred like any other finding.
@@ -305,19 +305,24 @@ by definition: fixing it completes the asked work, it is not scope-creep — onl
 work is deferred.
 
 **Worked example — fix in place.** A reviewer finds: "this PR's diff moves the upload handler from
-`src/routes/records.js` to `src/services/records.js`, but the comment block this same diff adds two
-lines above still says `// see src/routes/records.js for the validation config` — a reader following
-the comment lands on a file this PR deleted." The cited file's comment is inside the PR's own
-touched-files set and the fix is a one-line path correction. Disposition: fix in place. Filing it as
-a follow-up issue or chip would be the anti-pattern above — a trivial, in-diff fix routed around the
-review instead of made in it.
+`e.g. src/routes/records.js` to `e.g. src/services/records.js`, but the comment block this same diff
+adds two lines above still says `// see e.g. src/routes/records.js for the validation config` — a
+reader following the comment lands on a file this PR deleted." The cited file's comment is inside the
+PR's own touched-files set and the fix is a one-line path correction. Disposition: fix in place.
+Filing it as a follow-up issue or chip would be the anti-pattern above — a trivial, in-diff fix routed
+around the review instead of made in it.
 
-**Worked example — defer.** A reviewer finds: "`src/services/ranking.js`, untouched by this PR,
+**Worked example — defer.** A reviewer finds: "`e.g. src/services/ranking.js`, untouched by this PR,
 computes tie-breaks with a comparator that silently mis-ranks entries sharing a timestamp —
 unrelated to the change under review." The defect lives in code this change never
 touches, and fixing it is a separate correctness fix to a different subsystem with its own test
 surface. Disposition: defer — a new GitHub issue.
 
-**Severity labels.** `severity:major` is restored to its narrow definition: crash, data-loss, or
-security defects only. A feature gap, a missing edge case, or a process nit is `severity:minor` or
-carries no severity label at all.
+**Severity labels.** The GitHub `severity:major` label is narrow: crash, data-loss, or security
+defects only. A feature gap, a missing edge case, or a process nit is `severity:minor` or carries no
+severity label at all. **This narrow scope governs the GitHub label only** — it does not override the
+finding-severity floor `standards/design-philosophy.md` § "Red flags" sets for review disposition: a
+finding that matches a named red flag there is at least `major` for the one-round stop rule (never
+downgraded to minor/nit) even when it is not crash/data-loss/security and so carries no GitHub
+`severity:major` label. The two are different axes — a GitHub label and a review-disposition floor —
+and a single finding can be `major` on one axis without being `major` on the other.

@@ -93,6 +93,16 @@ you pick).
     `tools/visual-surface.ps1`'s own placeholder string (item 3 above); once that file is filled in,
     this test still passes because it is testing the throw-on-empty-glob behavior, not the specific
     placeholder text.
+17. **In-license check — `standards/issue-standards.md` § "In-license check".** Name this project's
+    out-of-scope dependency classes (an external/paid API, a non-Anthropic model key, a hosted
+    third-party service — or state plainly that none are out of scope and any hosted service is
+    allowed). Until this is filled in, an issue reviewer has a blocking rule with nothing configured
+    to bound it.
+18. **Runtime-state directories — `CLAUDE.md`, `.gitignore`.** `CLAUDE.md` § "Repo conventions" names
+    this project's runtime-state directories (database, uploads, generated exports, local secrets)
+    with a `FILL:` marker; the value must name the same directories `.gitignore` actually ignores
+    (`data/` is the template's own placeholder pattern there) — the two must agree, since one is the
+    stated rule and the other is the mechanism that enforces it.
 
 ---
 

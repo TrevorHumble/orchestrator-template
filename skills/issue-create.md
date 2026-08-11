@@ -19,7 +19,7 @@ description: >
 ### Acceptance criteria
 
 Each criterion in Given/When/Then form. What a criterion must be is defined in
-`issue-standards.md` § "Acceptance criteria" — read it; do not restate it here.
+`standards/issue-standards.md` § "Acceptance criteria" — read it; do not restate it here.
 
 ### Implementation plan
 

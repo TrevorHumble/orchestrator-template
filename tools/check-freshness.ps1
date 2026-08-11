@@ -1,6 +1,6 @@
 # check-freshness: read-only staleness + overlap check, shared by the owner-review
-# path (skills/session-brief.md, README.md) and the build-session path
-# (.claude/commands/build.md step 0, .claude/commands/realign.md). Build sessions work in isolated worktrees, push
+# path (skills/session-brief.md) and the build-session path
+# (.claude/commands/build.md step 0, agents/orchestrator.md, .claude/commands/realign.md). Build sessions work in isolated worktrees, push
 # branches, and merge on GitHub; nothing ever pulls those merges back into
 # the primary checkout, so drift can accumulate silently on either side of that
 # boundary -- an owner's local main can drift dozens of commits behind
@@ -165,10 +165,10 @@ if ($MyInvocation.InvocationName -ne '.') {
   }
 
   if ($behind -gt 0) {
-    # Always "commits behind", even for 1: README.md and skills/session-brief.md
-    # both depend on that literal phrase appearing whenever behind > 0, and on
-    # ANY behind-count exiting non-zero -- that contract is preserved
-    # unconditionally.
+    # Always "commits behind", even for 1: .claude/commands/build.md and
+    # agents/orchestrator.md both depend on that literal phrase appearing
+    # whenever behind > 0, and on ANY behind-count exiting non-zero -- that
+    # contract is preserved unconditionally.
     Write-Output "$behind commits behind origin/main -- resync (git pull, or re-fetch this worktree's base) before trusting this checkout."
     if ($ahead -gt 0) {
       Write-Output "(Also $ahead local commit(s) origin/main does not have.)"

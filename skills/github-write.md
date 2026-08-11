@@ -26,10 +26,12 @@ The remote is this project's own GitHub repo (set when you created it from the t
 
 Every issue file `data/wip-issues/<N>-slug.md` has a matching GitHub issue, and **the GitHub issue owns the
 status** (open/closed/labels). The file is the detail; the board is the state. The pipeline keeps them
-equal — see DESIGN.md "Source of truth". The sync rule:
+equal — see `CLAUDE.md` § "Repo conventions". The sync rule:
 
-- **On issue creation** → `gh issue create` (title `#NNNN <short title>`, label by tier: `ready` /
-  `backlog` / `low priority`). The issue body can summarize and link the file.
+- **On issue creation** → `gh issue create --label needs-issue-review` (title `#NNNN <short title>`,
+  also labelled by tier: `ready` or `backlog` — see `standards/issue-standards.md` for the two tiers).
+  The issue body can summarize and link the file. Every newly created issue carries
+  `needs-issue-review` until it PASSes issue review (`skills/issue-create.md`).
 - **On merge to `main` (via pull request)** → `gh issue close` the matching card, referencing the commit.
 - **On graduation/supersession** → update the card (re-label, or close with a pointer to the successor).
 - Never leave the board disagreeing with the issue files / BUILDLOG; the orchestrator's own
@@ -40,6 +42,7 @@ equal — see DESIGN.md "Source of truth". The sync rule:
 & (Get-GhPath) issue create `
   --title "#NNNN Short title" `
   --label "ready" `
+  --label "needs-issue-review" `
   --body @'
 Tracks data/wip-issues/<N>-slug.md (canonical detail in the repo).
 

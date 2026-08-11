@@ -53,7 +53,13 @@ Before any command that changes state — deleting a file, `git reset`, rewritin
 2. State the mechanism by which the planned command fixes that symptom.
 3. If the mechanism is "this usually fixes it" rather than a traced cause → gather one more observation first (read the log line, print the value, check the file's actual state).
 
-> **Example (pattern-matched wrong fix):** a commit is blocked at `pre-commit`. The pattern-match reflex says "re-run `tools/setup-hooks.ps1`" — but the hook being _live_ is exactly why it blocked. The traced cause (read the hook's stderr) is a missing PASS verdict for the staged tree; the correct action is recording the genuine review verdict, not reinstalling hooks. The reflex action would have changed state without addressing the cause.
+> **Example (pattern-matched wrong fix):** a commit is blocked at `.githooks/commit-msg`. The
+> pattern-match reflex says "re-run `tools/setup-hooks.ps1`" — assuming the hook is misconfigured —
+> but the hook being _live_ and firing correctly is exactly why it blocked. The traced cause (read the
+> hook's own rejection message) is that the staged commit message names no GitHub issue; the correct
+> action is adding `(#N)` (or a closing keyword, or using an `issue-N`-shaped branch) to the message,
+> not reinstalling hooks. The reflex action would have changed git config without addressing the
+> cause.
 
 Destructive commands with no in-loop undo (deleting owner data, force-push over shared history) are never justified by inference alone — they need direct observation of the target's current state first.
 

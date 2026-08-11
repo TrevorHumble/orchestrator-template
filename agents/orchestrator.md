@@ -67,7 +67,7 @@ All prior-art paths must exist on disk.
 4. **Issue review** — spawn exactly **one** `agents/reviewer-issue.md` (Opus) via `skills/spawn-adversarial-review.md`. Issues always use a single reviewer — never a panel. Fix every blocking defect. Re-review with a fresh reviewer instance. A FAIL is fixed, never overridden.
 5. **Implementation** — spawn `agents/implementation-agent.md` (Sonnet) with full handoff: the
    passing issue + all prior-art file paths.
-6. **Artifact review** — spawn the appropriate reviewer agent (Opus) from `agents/reviewer-*.md` via `skills/spawn-adversarial-review.md`. Reviewer receives only the artifact under review and the relevant standard — no framing, no positive hints, no planted suspicions. **Reviewer count and cadence follow `standards/adversarial-review-protocol.md` § "Reviewer count by artifact"** (authoritative; not restated here to avoid drift): code round 1 uses one PR reviewer plus the design-philosophy reviewer, both must PASS; a blocker/major finding on any later round takes exactly one re-check with one fresh reviewer, scoped to the fix — see § "One-round stop rule". **If the change adds a new component or makes a significant structural change, also spawn `agents/reviewer-architecture.md` (Opus) at this step** — see § "Architecture lens (automatic on structural changes)" below; its blocker/major findings take the same one-round stop rule. **If the diff touches the source surface defined in § "Doc-currency step", dispatch the `doc-currency` step concurrently with this review** — see § "Doc-currency step" below.
+6. **Artifact review** — spawn the appropriate reviewer agent (Opus) from `agents/reviewer-*.md` via `skills/spawn-adversarial-review.md`. Reviewer receives the artifact under review, the staged diff, and the relevant standard — no framing, no positive hints, no planted suspicions. **Reviewer count and cadence follow `standards/adversarial-review-protocol.md` § "Reviewer count by artifact"** (authoritative; not restated here to avoid drift): code round 1 uses one PR reviewer plus the design-philosophy reviewer, both must PASS; a blocker/major finding on any later round takes exactly one re-check with one fresh reviewer, scoped to the fix — see § "One-round stop rule". **If the change adds a new component or makes a significant structural change, also spawn `agents/reviewer-architecture.md` (Opus) at this step** — see § "Architecture lens (automatic on structural changes)" below; its blocker/major findings take the same one-round stop rule. **If the diff touches the source surface defined in § "Doc-currency step", dispatch the `doc-currency` step concurrently with this review** — see § "Doc-currency step" below.
 7. **Commit** — once per run, before the first commit, confirm the hooks are live: `git config core.hooksPath` should print `.githooks` (if not, run `tools/setup-hooks.ps1`; never proceed assuming a gate that isn't on — an unconfigured clone enforces nothing). On the reviewers' PASS (and, for a blocker/major finding, once it is fixed and confirmed per the one-round stop rule), `git commit` with a short message that includes `(#N)` referencing the issue. **`commit-msg` checks that the commit message names a GitHub issue** — a code commit with no `(#N)`, closing keyword, or `issue-N` branch is blocked; a doc-only (`*.md`) commit is exempt. There is no review-evidence file to record — review practice in this pipeline is unmechanized by design.
    Then **close the GitHub issue** for this work (`gh issue close`, referencing the commit) so the board
    matches reality. The board is kept current at every transition: issue created → `gh issue` opened;
@@ -144,12 +144,12 @@ longer quietly redecorate something already blessed.
   Door 2 never re-enters the adversarial-review pipeline directly; it re-enters the fast phase-1 loop.
 - **There is no third door.** Nobody — implementer, reviewer, or orchestrator — renegotiates the
   owner's approved look by itself. It is fixed (Door 1), or the owner is asked (Door 2). **Every Door 2
-  occurrence is recorded in the run report** (`BUILDLOG.md`, or the timed run's Live-log ledger) —
+  occurrence is recorded in the run report** (`BUILDLOG.md`, in the ledger line form during a timed run) —
   nobody knows how often Door 2 fires, so its real frequency is counted, not assumed.
 
 **Bind to shipped visuals.** Approval binds only to the visual-surface hash the owner actually saw at
 approval time. Any subsequent change to the visual surface — including a Door 1 or Door 2 fix — voids
-the freeze; a fresh phase-1-loop pass (however short) and a fresh `persist-visual-approval.ps1` run are
+the freeze; a fresh phase-1-loop pass (however short) and a fresh `tools/persist-visual-approval.ps1` run are
 required before merge. Only on an explicit, currently-valid owner approval does the visual change
 proceed to step 6 (Artifact review), the commit gate, CI, and merge.
 
@@ -172,8 +172,8 @@ the adversarial PR review, not before or after it, so it adds no wall-clock time
 doc-currency runs on Sonnet and typically finishes well within the longer Opus PR-review window.
 
 **Model and instruction.** Spawned with an explicit `model: sonnet` pin (never inherits a default).
-Instruction: compare the touched surface (`<FILL: the same source paths named above>`) against
-`DESIGN.md` and `README.md`'s feature claims, and fix any drift by committing the
+Instruction: compare the touched surface (the same source paths named in the Trigger paragraph above)
+against `DESIGN.md` and `README.md`'s feature claims, and fix any drift by committing the
 correction into the same PR.
 
 **`.md`-only; halt-and-report on anything wider.** The doc-currency agent's commit is `.md`-only.
@@ -193,7 +193,7 @@ review covers them too, and no separate re-confirm round is needed. Classificati
 
 **Not part of step 6's per-issue ship flow.** This section fires once at the boundary between waves
 — not after every PR merge. After a wave's planned batch of issues merges, append a line to
-`BUILDLOG.md` (or the run's Live-log ledger, during a timed run) noting the wave is complete, closing
+`BUILDLOG.md` (in the ledger line form during a timed run) noting the wave is complete, closing
 with the literal closing line: **owner may run /post-wave-review** — a cross-PR regression,
 seam, docs-vs-code drift, and lived-data-drill check.
 
@@ -222,7 +222,7 @@ powershell -File tools/classify-dep-pr.ps1 -Ecosystem <ecosystem> -DepName <name
 - Output `auto` → merge when CI is green; no tracked decision needed.
 - Output `review` → do not merge; open or reference a GitHub issue recording the decision rationale before merging.
 
-Policy details and the critical-dependency list live in `CLAUDE.md` § "Dependency updates (Dependabot)". The authoritative tier logic lives in `tools/classify-dep-pr.ps1`; the summary in CLAUDE.md is a human-readable restatement, and the critical-dependency list is drift-guarded by `tests/classify-dep-pr.test.js`.
+Policy details and the critical-dependency list live in `CLAUDE.md` § "Dependency updates (Dependabot)". The authoritative tier logic lives in `tools/classify-dep-pr-core.ps1`'s `$CriticalProdDeps`; the summary in `CLAUDE.md` and the `.github/dependabot.yml` `prod-deps` group are hand-kept mirrors of that list, not drift-guarded by any test — see `PROJECT-SETUP.md` § "Fill in the blanks" item 4 for the full mirror list and why `tests/classify-dep-pr.test.js` cannot catch a mismatch.
 
 ---
 
@@ -237,7 +237,7 @@ orchestrator never presents, commits, or moves past an unreviewed artifact, and 
 review it."
 
 - **The orchestrator does not author deliverable artifacts** (agent specs incl. this file, skills, docs,
-  code); those are written through `agent-writer.md` / `implementation-agent.md` (see Constraints) and
+  code); those are written through `skills/agent-writer.md` / `agents/implementation-agent.md` (see Constraints) and
   auto-trigger review the same way.
 - **A doc-only or typo-only change skips only the design-philosophy gate** (see Review cadence) — never the
   adversarial review.
@@ -295,7 +295,7 @@ start)/60`. **Never estimate, infer, or carry-forward `elapsed` by feel** — a 
   contradicts a recorded decision does not qualify either).
   Does not qualify: "error handling could be more consistent
   across routes" (no file, no concrete change, no source — a theme, not a candidate). Research output stays
-  within the in-license constraint (`DESIGN.md` governance) — a
+  within the in-license constraint (`standards/issue-standards.md` § "In-license check") — a
   "better practice" needing an external/paid API or SaaS is out of scope and is surfaced as a note, not adopted.
 - **Watch CI to green before the increment counts as done.** Each increment that pushes to `main` is not
   complete until its CI run is watched to completion and confirmed green — same guarantee as the Commit

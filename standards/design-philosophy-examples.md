@@ -24,8 +24,19 @@ Clean — one decision the caller cares about; the storage policy lives inside (
 // Storage policy is this module's decision: callers say what, not how.
 const DEFAULT_TTL_SECONDS = 3600;
 const WRITE_RETRIES = 3;
+const RETRY_BACKOFF_MS = 200;
+
 function saveRecord(id, data) {
-  return store.write(id, data, { ttl: DEFAULT_TTL_SECONDS, retries: WRITE_RETRIES });
+  let lastError;
+  for (let attempt = 0; attempt < WRITE_RETRIES; attempt++) {
+    try {
+      return store.write(id, data, { ttl: DEFAULT_TTL_SECONDS });
+    } catch (err) {
+      lastError = err;
+      sleep(RETRY_BACKOFF_MS * (attempt + 1));
+    }
+  }
+  throw lastError;
 }
 ```
 
@@ -44,11 +55,14 @@ const rows = db.prepare('SELECT * FROM records WHERE deleted = 0 AND owner_id = 
 const rows = db.prepare('SELECT * FROM records WHERE deleted = 0 AND group_id = ?').all(groupId);
 ```
 
-Clean — the visibility rule (`deleted = 0`) is applied inside the module that owns it, and callers consume the computed result, never the rule:
+Clean — the visibility rule (`deleted = 0`) is applied inside the module that owns it, and both callers consume the computed result, never the rule:
 
 ```js
-// store.js owns "visible"; callers consume the computed result, not the rule.
+// store.js owns "visible"; both callers consume the computed result, not the rule.
+// hypothetical routeA.js
 const rows = store.listVisible({ ownerId: id });
+// hypothetical routeB.js
+const rows = store.listVisible({ groupId });
 ```
 
 Not a finding: two modules both importing a shared `config` module is not leakage — config is the sanctioned shared surface. Leakage requires an _internal representation decision_ (storage format, encoding, a filter rule like visibility) reappearing outside its owner.
@@ -61,15 +75,19 @@ Flag — modules named for when they run, so one format decision smears across a
 
 ```js
 // step1-fetch.js, step2-normalize.js, step3-persist.js
-// step2 must know step1 returned raw rows; step3 must know step2 kept the header row.
+// step2 must know step1's raw response nests results under `payload.items`;
+// step3 must know step2 already renamed `id` to `recordId` before writing.
 ```
 
 Clean — modules named for what they hide; order of operations is an implementation detail:
 
 ```js
-// import-records.js — owns the file format end to end
-function importRecords(sourcePath) {
-  /* fetch, normalize, persist; format never escapes */
+// syncRecords.js — owns the upstream-to-store pipeline end to end; the shape of the
+// upstream response and the shape store.write expects never leak past this module.
+function syncRecords(sourceUrl) {
+  const response = fetchUpstream(sourceUrl); // fetch
+  const records = response.payload.items.map(toRecord); // normalize
+  return store.writeAll(records); // persist
 }
 ```
 
@@ -116,9 +134,9 @@ res.json(tmp);
 Clean — the names state what the things are:
 
 ```js
-const inputRecord = parseRequestBody(req);
-const savedRecord = store.save(inputRecord);
-res.json(formatter.toResponse(savedRecord));
+const requestBody = parseRequestBody(req);
+const savedRecord = persistRecord(requestBody);
+res.json(savedRecord);
 ```
 
 Not a finding: a short name with a one-line scope and an obvious source (`for (const row of rows)`) is fine — the flag is genericness that survives past the point a reader needs to know the meaning, not brevity itself.

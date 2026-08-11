@@ -26,7 +26,7 @@ Do not mix. Wrong file = wrong reader.
 
 ## Acceptance criteria
 
-What an AC for a doc must be is defined in `issue-standards.md` § "Acceptance criteria" — read it; do not restate it here.
+What an AC for a doc must be is defined in `standards/issue-standards.md` § "Acceptance criteria" — read it; do not restate it here.
 
 ## Anti-bloat
 

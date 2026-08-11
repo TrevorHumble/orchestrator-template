@@ -15,9 +15,13 @@ Two tools run in GitHub's CI system: `eslint` scans each change for sloppy or ri
 and `prettier` checks that formatting is consistent. These run automatically on every push and every
 pull request.
 
-**The working pieces are tested against known correct answers.**
-The test suite (powered by `vitest`) runs on every build. It checks that the app's logic produces
-the right results, not just that the code ran without crashing.
+**The working pieces are tested against known correct answers, wherever a test exists.**
+The test suite (powered by `vitest`) runs on every build. Where a test asserts a specific expected
+output, a passing run confirms that logic produces the right result, not just that the code ran
+without crashing. A fresh clone of this template ships no application logic and no coverage
+threshold, so a green run here only proves the pipeline's own tooling (the tools in `tools/` and
+their tests) behaves as asserted — it says nothing about application code until this project has
+written both the code and tests that assert real values against it.
 
 **GitHub's own security tools are watching continuously.**
 Two GitHub-native checks are configured for this repo:

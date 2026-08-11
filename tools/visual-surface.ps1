@@ -5,9 +5,9 @@
 # Mirrors the "views/CSS/asset/user-facing copy" row of
 # standards/adversarial-review-protocol.md § "Which reviews does this change
 # need?" — the same visual-change surface agents/orchestrator.md § "Visual-
-# approval loop" triggers on. tests/visual-approval.test.js drift-guards this
-# file's glob list against that row so the two definitions cannot silently
-# diverge.
+# approval loop" triggers on. No test drift-guards this file's glob list
+# against that row; the two are filled in and kept in agreement by hand — see
+# PROJECT-SETUP.md § "Fill in the blanks" items 3 and 7.
 #
 # Windows PowerShell 5.1-compatible: no ternary, no ??, no &&, no ||.
 

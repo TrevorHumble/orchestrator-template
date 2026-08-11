@@ -8,10 +8,16 @@ they were made, oldest first. Each ADR states what was decided, why, and what it
 is never deleted when superseded; a later ADR says so and points back to it, so the history of
 "why we changed our mind" stays legible.
 
-**Format.** `## ADR: <title>`, then **Status:** (`accepted`, `superseded by <ADR>`, or
-`accepted, owner-authorized` for a change to governing machinery), then prose. Cite real evidence for
-any claim about how the pipeline has behaved — a specific run, a specific failure — not a general
-assertion that something "works well" or "is a best practice."
+**Format.** `## ADR: <title>`, then **Status:** (`accepted`, `superseded by <ADR>`,
+`accepted, owner-authorized` for a change to governing machinery, or
+`accepted, inherited from the template's origin project` for an ADR ported in wholesale from the
+project this template was extracted from), then prose. Cite real evidence for any claim about how the
+pipeline has behaved — a specific run, a specific failure — not a general assertion that something
+"works well" or "is a best practice." That evidence rule binds every ADR written in this project going
+forward; an inherited ADR's evidence lived in the origin project's own run history, which this
+extraction does not carry forward, so the four inherited ADRs below argue from the origin project's
+general experience rather than a citable run here — that is the inherited status, not a violation of
+this rule.
 
 Add new ADRs at the bottom, in the order they were made. Once a project has its own application
 source tree (e.g. `src/`), its architecture ADRs (schema choices, framework choices, data-model
@@ -113,12 +119,20 @@ building something before its criteria exist, defeating the reason phase 1 runs 
 keeps phase 1 outside the review pipeline entirely: nothing commits, so there is nothing for a
 reviewer to review yet, and no criteria exist yet for one to review against.
 
-**Why this is the sole exception to "no human in the loop."** The adjacent ADR above keeps the owner
-out of ordinary merge decisions because adversarial review is a better and more scalable quality
-gate than a human diff-read. Taste is different in kind: it has no ground truth an adversary can
-check against, so pulling it out of the reviewer's mandate and into an explicit, bounded,
-pre-implementation loop is not a concession — it is putting the judgment where it actually belongs,
-without reopening the door to a human reading diffs for everything else.
+**Why this is an exception to "no human in the loop," alongside two narrower, recorded ones.** The
+adjacent ADR above keeps the owner out of ordinary merge decisions because adversarial review is a
+better and more scalable quality gate than a human diff-read. Taste is different in kind: it has no
+ground truth an adversary can check against, so pulling it out of the reviewer's mandate and into an
+explicit, bounded, pre-implementation loop is not a concession — it is putting the judgment where it
+actually belongs, without reopening the door to a human reading diffs for everything else. It is the
+only exception of that _kind_ — a pre-implementation loop that replaces review entirely — but it is
+not the only recorded control that reserves a decision to the owner: `standards/issue-standards.md`
+§ "Definition of Done ownership" requires owner approval before a `definition-of-done.md` change
+merges, since that file is what every future PR review is judged against, and § "Acceptance-criteria
+amendment" requires owner approval plus one reviewer before a mid-flight change to an issue's
+criteria becomes the new contract. Both are narrower than the visual-approval loop — they gate one
+specific document each, recorded and tamper-evident rather than tamper-proof on a solo-maintainer
+repo — and neither reopens human diff-reading for ordinary merges.
 
 **What this trades away.** A visual change has a slower path to first-issue-drafted than a
 non-visual one — the owner has to be present, live, for phase 1. This is accepted because the

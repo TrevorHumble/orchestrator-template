@@ -33,13 +33,12 @@ is_code="$(printf '%s' "$is_code" | tr -d '[:space:]')"
 if [ "$is_code" = "DOC" ]; then
   exit 0
 fi
-# Anything not explicitly DOC (CODE, empty, or PowerShell error) -> enforce. Fail-closed.
 
 # CODE commit: read the commit message, resolve an issue number.
 msg="$(cat "$msg_file")"
 branch="$(git symbolic-ref --short HEAD 2>/dev/null)" || branch=""
 
-issue_num="$("$_ps" -ExecutionPolicy Bypass -NoProfile -Command "
+issue_num="$("$_ps" -NoProfile -ExecutionPolicy Bypass -Command "
   . '$root/tools/issue-core.ps1'
   \$n = Resolve-IssueNumber -Message '$( echo "$msg" | sed "s/'/\\''/g" )' -Branch '$branch'
   Write-Output \$n

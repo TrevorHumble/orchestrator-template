@@ -18,7 +18,7 @@ description: >
 
 **Plant no suspicions.** "Suspect X is broken" leads the witness toward a predetermined finding and away from problems you did not anticipate. Say "assume failure, look hard."
 
-**Minimum context — no biasing framing.** Give the artifact + the relevant standard + the protocol, and none of your hopes or explanations. Every additional sentence is a potential bias vector.
+**Minimum context — no biasing framing.** Give the artifact, the staged diff, the relevant standard, and the protocol, and none of your hopes or explanations. Every additional sentence is a potential bias vector.
 
 **Full scope — list every artifact actually under review.** Anything not listed is itself a finding. Do not give the reviewer a curated subset.
 
@@ -35,7 +35,14 @@ Protocol: standards/adversarial-review-protocol.md
 
 Artifact(s) under review (complete list — anything missing from the artifact
 itself is a finding):
-- <path to artifact, or "the staged diff, tree oid <oid>">
+- <path to artifact>
+- the staged diff, tree oid <oid>
+
+Every code review spawn requires the staged diff. A spawn that supplies only
+an artifact path with no diff is an incomplete spawn, not a smaller one —
+`agents/reviewer-design-philosophy.md` halts with FAIL when no diff is
+supplied, so the spawner must always capture and include the diff (e.g. via
+`git diff --cached` or `git show <tree-oid>`) before spawning.
 
 Return your verdict in the output format your agent definition specifies
 (verdict token plus numbered defect list with severity and file:line evidence).

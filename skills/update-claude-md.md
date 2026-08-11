@@ -9,26 +9,24 @@ description: >-
 
 # update-claude-md
 
-CLAUDE.md is the orchestrator's operating doc. It carries the project's rosters
-(the `agents/`, `skills/`, `standards/` inventories under "Where things live")
-and its conventions — not a task list. **Issue status lives on the GitHub board,
-not in CLAUDE.md**; the board is the single source of truth for state, so there
-is no issue table to maintain here.
+CLAUDE.md is the orchestrator's operating doc. It carries the project's
+conventions — not a task list, and not an agent/skill/standard roster: the
+`agents/`, `skills/`, and `standards/` directory listings are the sole source
+for what exists in each, so there is nothing to mirror here. **Issue status
+lives on the GitHub board, not in CLAUDE.md**; the board is the single source
+of truth for state, so there is no issue table to maintain here either.
 
 ## What to refresh
 
 After an issue is committed to `main`, check whether the change altered anything
 CLAUDE.md describes, and bring it current in the same pass:
 
-1. **Rosters** — if the commit added, removed, or renamed an agent, skill, or
-   standard, update the matching list under "Where things live" (one terse line:
-   filename + one-line purpose, matching the existing entries).
-2. **Conventions / policy** — if it changed a convention, a model-policy rule, a
-   pipeline step, or an authoritative-source pointer, edit that line so the doc
-   matches how the system now behaves.
+- **Conventions / policy** — if it changed a convention, a model-policy rule, a
+  pipeline step, or an authoritative-source pointer, edit that line so the doc
+  matches how the system now behaves.
 
-Touch nothing that did not change. Keep every entry terse — a filename and a
-one-line purpose, no prose summaries. Match the surrounding format.
+Touch nothing that did not change. Keep every entry terse — no prose summaries.
+Match the surrounding format.
 
 ## Where
 

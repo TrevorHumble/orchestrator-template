@@ -16,7 +16,7 @@ Written as Given/When/Then criteria testable by an agent. **An acceptance criter
 
 A criterion need only be answerable yes/no by a competent reviewer against real evidence — that bar does not move, but the old requirement that answering it involve no judgment is dropped. In practice, two reviewers may disagree on the same criterion, and that is accepted knowingly: the alternative is criteria shredded into dozens of greppable strings that nobody could hold in the first place.
 
-**Write 1–6 criteria — 8 is the ceiling, not a target.** More criteria are not more safety; past the ceiling, nobody can hold them, and a reviewer ends up picking one, citing it, and missing the rest. Blowing the ceiling is at least major severity: one earlier issue carried 34 criteria, and its review spent itself on one of them while the real question went unasked.
+**Write 1–6 criteria — 8 is the ceiling, not a target.** More criteria are not more safety; past the ceiling, nobody can hold them, and a reviewer ends up picking one, citing it, and missing the rest. Blowing the ceiling is at least major severity: an issue with too many criteria for a reviewer to hold at once produces a review that spends itself on one of them while the real question goes unasked.
 
 **A ready-tier issue's criteria must include at least one that asserts a behavioral output value** (input → expected output), so the criteria can catch a wrong implementation — an issue whose criteria are all presence/structural checks cannot, since a broken implementation can satisfy every "file contains X" check.
 
@@ -34,7 +34,7 @@ An issue's acceptance criteria are not frozen the instant the issue passes revie
 
 The amendment is bounded to the issue's existing footprint: it may only add work **inside files already on the issue's `Touches` list** — put plainly, an amendment never adds a file. The `Touches` list is a hard line set at issue-review time — it is what makes concurrent waves safe, since two agents must never share a file — and an amendment that needs a file outside that list is not an amendment, it is a new issue, filed and reviewed on its own.
 
-Example: an issue touching `src/services/records.js` may be amended to also validate a field's shape inside that same file, with owner + reviewer sign-off. It may not be amended to also touch `src/routes/admin.js` to add a new admin control — that is a new, separately-reviewed issue, even if the owner wants it done "at the same time."
+Example: an issue touching `e.g. src/services/records.js` may be amended to also validate a field's shape inside that same file, with owner + reviewer sign-off. It may not be amended to also touch `e.g. src/routes/admin.js` to add a new admin control — that is a new, separately-reviewed issue, even if the owner wants it done "at the same time."
 
 ---
 
@@ -160,7 +160,7 @@ A `spawned-in-run` issue missing the block, or with any of the four fields empty
 
 ## In-license check (all tiers)
 
-An issue that requires an `external/paid API`, a `non-Anthropic model key`, or a `hosted third-party service` is `out of license` — return `FAIL`.
+An issue that requires `<FILL: this project's out-of-scope dependency classes, or "none — this project may use any hosted service">` is `out of license` — return `FAIL`.
 
 ---
 
@@ -168,4 +168,4 @@ An issue that requires an `external/paid API`, a `non-Anthropic model key`, or a
 
 `definition-of-done.md` (repo root) is not part of any specially-gated surface, so changing it takes the routine one-reviewer bar like any other change. That placement is deliberate: the DoD needs to stay cheap to amend as the project learns what "done" actually requires.
 
-Cheap to review is not the same as unowned. Changing `definition-of-done.md` requires **owner approval** before it merges — the owner is the one person who can add or loosen a clause that every future PR review will be judged against. This is a recorded rule, not a mechanically enforced one: on a solo-maintainer repo (`required_approving_review_count = 0`), a CODEOWNERS-style gate cannot force owner sign-off, so the check is tamper-evident, not tamper-proof — the same honest posture as the rest of this pipeline (see `DESIGN.md` for the rationale, if recorded there).
+Cheap to review is not the same as unowned. Changing `definition-of-done.md` requires **owner approval** before it merges — the owner is the one person who can add or loosen a clause that every future PR review will be judged against. This is a recorded rule, not a mechanically enforced one: on a solo-maintainer repo (`required_approving_review_count = 0`), a CODEOWNERS-style gate cannot force owner sign-off, so the check is tamper-evident, not tamper-proof — the same honest posture as the rest of this pipeline. `DESIGN.md`'s ADR on the sole exception to "no human in the loop" names this section as one of the recorded further exceptions.

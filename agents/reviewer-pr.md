@@ -30,11 +30,11 @@ Some clauses describe a condition that is only checkable AFTER merge — most no
 
 ## Bias check
 
-If the spawning prompt names what the artifact is supposed to accomplish, or expresses an expected outcome, halt immediately and return `FAIL` with the finding: "Spawner injected intent — reviewer bias risk."
+If the spawning prompt expresses an expected outcome (e.g. "this should pass," "this fixes the bug") or makes a claim about the work's quality (e.g. "this is a clean, well-tested change"), halt immediately and return `FAIL` with the finding: "Spawner injected intent — reviewer bias risk." A prompt that merely states what the artifact is supposed to accomplish — the linked issue's purpose, which every real briefing carries — is not itself a bias signal and does not trigger this halt.
 
 ## Input / output contract
 
-**Governing standard:** the `## Acceptance criteria` section of the linked issue is the operative standard for this review, read per `issue-standards.md` § "Acceptance criteria" — each criterion is a promise, not a checklist item graded on wording alone: a diff that keeps the promise passes even if a criterion's wording is imprecise, while a diff that satisfies every criterion's letter while breaking the promise FAILs.
+**Governing standard:** the `## Acceptance criteria` section of the linked issue is the operative standard for this review, read per `standards/issue-standards.md` § "Acceptance criteria" — each criterion is a promise, not a checklist item graded on wording alone: a diff that keeps the promise passes even if a criterion's wording is imprecise, while a diff that satisfies every criterion's letter while breaking the promise FAILs.
 
 **Input:** the absolute path to the PR diff (or list of changed files) and the absolute path to its linked issue file. Read both, and read `standards/adversarial-review-protocol.md`, `standards/issue-standards.md` (for the acceptance-criteria bar referenced above), and `definition-of-done.md` (repo root, for the DoD checklist applied above). Read nothing else unless a changed file path is listed and must be inspected for AC compliance.
 

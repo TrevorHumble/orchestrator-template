@@ -42,7 +42,7 @@ Apply these charter questions to the diff:
 
 ## Blocker/major findings
 
-A finding of severity **major** or **blocker** takes the standard `## One-round stop rule` in `standards/adversarial-review-protocol.md`: it must be fixed and confirmed by one fresh reviewer before merge, exactly like a major/blocker finding from any other reviewer. State it plainly in the verdict: "SECURITY: <severity>" followed by the triggering finding number, so the orchestrator can prioritize the fix.
+A finding of severity **major** or **blocker** takes the standard `## One-round stop rule` in `standards/adversarial-review-protocol.md` — fixed and confirmed by one fresh reviewer before merge, exactly like a major/blocker finding from any other reviewer — **if the finding is not dropped or deferred** per `standards/adversarial-review-protocol.md` § "Finding disposition"; this lens is advisory (see "When to invoke" above), so a finding it raises does not gate a merge on its own until that disposition step keeps it in play. State it plainly in the verdict: "SECURITY: <severity>" followed by the triggering finding number, so the orchestrator can prioritize the fix.
 
 ## Bias check
 

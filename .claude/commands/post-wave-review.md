@@ -24,29 +24,26 @@ Individual PRs were each reviewed on their own — what nobody has yet judged
 is the whole: how this wave's changes behave together, and whether they
 disturbed anything the earlier waves built.
 
-WHAT WE'RE HOPING TO LEARN — at heart, in each area:
+WHAT TO ASSESS — in each area:
 
-- Yesterday's promises. Features from earlier waves worked when they shipped.
-  We're hoping they still do — the failure we fear most is the quiet one
-  nobody's watching for anymore.
-- The seams. Each feature passed review alone. We're hoping they also work
-  together — `<FILL: two or three concrete cross-feature seams for this
-project, e.g. "access control and the export, review queue and the feed,
-new sign-in and old sessions">`, wherever two features share ground.
-- The data's future. Real users' data will live through many deploys. We're
-  hoping a database that's been used in practice — not a fresh seed — comes
-  through a migration whole, and that a backup, once actually restored,
-  contains a usable app.
-- The record. We're hoping the docs, the test plan, the board, and the build
-  log still describe the app that exists tonight — not the one from two waves
-  ago. Where the record has drifted, we'd like to know.
-- Under load. We have baseline performance numbers `<FILL: path to this
-project's load-test baseline doc, if any>`. We're hoping this wave didn't
-  bend the curve.
-- The process itself. You'll see what our reviews caught and what they didn't.
-  We'd genuinely value your read on where our review process was blind this
-  wave — that observation compounds more than any single bug.
-- and advise us: are we still meeting our goals?
+- Yesterday's promises. Do features from earlier waves still work? Evidence.
+- The seams. Each feature passed review alone. Do they also work together —
+  `<FILL: two or three concrete cross-feature seams for this project, e.g.
+"access control and the export, review queue and the feed, new sign-in and
+old sessions">`, and anywhere else two features share ground?
+- The data's future. Real users' data will live through many deploys. Does a
+  database that's been used in practice — not a fresh seed — come through a
+  migration whole? Does a backup, once actually restored, contain a usable
+  app?
+- The record. Do the docs, the test plan, the board, and the build log
+  describe the app that exists tonight, or an earlier one? Where has the
+  record drifted?
+- Under load. Baseline performance numbers: `<FILL: path to this project's
+load-test baseline doc, if any>`. Did this wave move the curve, and in which
+  direction?
+- The process itself. What did our reviews catch, and what did they miss this
+  wave? That observation compounds more than any single bug.
+- Are we still meeting our goals?
 
 HOUSE RULES (the few things we do need held firm)
 

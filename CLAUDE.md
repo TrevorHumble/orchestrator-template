@@ -113,9 +113,9 @@ Keep these separate (per `standards/documentation-standards.md`):
 | `CLAUDE.md` | Behavioral rules for the agent operating in this repo. |
 | `DESIGN.md` | Architecture decisions, rationale, tradeoffs.          |
 
-Do not mix them. No FINAL / LAST / TRULY_FINAL in filenames or headers. No AI-slop filler
-(`elegantly`, `robustly`, `seamlessly`, `comprehensively`, `leverages`, `powerful`, and the rest of
-the banned list in the standards).
+Do not mix them. No FINAL / LAST / TRULY_FINAL in filenames or headers. No AI-slop filler —
+the banned word list lives in one place, `standards/documentation-standards.md` § "Anti-AI-slop";
+this file does not keep its own copy.
 
 ## Repo conventions
 
@@ -157,8 +157,10 @@ smoke check on the actual deployment OS before merge — not just green CI, sinc
 different OS than production and cannot reproduce an OS-specific native-binary failure.
 
 The authoritative tier logic lives in `tools/classify-dep-pr-core.ps1` (invoked via
-`tools/classify-dep-pr.ps1`); the summary here is a human-readable restatement, and the
-critical-dependency list is drift-guarded by `tests/classify-dep-pr.test.js`.
+`tools/classify-dep-pr.ps1`); the summary here is a human-readable restatement. The
+critical-dependency list above is a hand-kept mirror of `tools/classify-dep-pr-core.ps1`'s
+`$CriticalProdDeps` — no test drift-guards the two against each other, so a project filling this in
+must update both by hand; see `PROJECT-SETUP.md` § "Fill in the blanks" item 4.
 
 Run the classifier against a PR's metadata to determine its tier:
 

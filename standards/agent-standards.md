@@ -39,7 +39,7 @@ Choice: implementer stays Sonnet; all reviewers run on Opus, by default. Reviewe
 
 The one exception is the `sonnet-only` tier: an issue the issue reviewer (`reviewer-issue`) awarded `AWARD sonnet-only` — per `standards/issue-standards.md` § "Sonnet tier eligibility" — runs its implementer and reviewers both on Sonnet. That is a judgment the issue reviewer makes once, at issue-review time, reading the issue's own touched paths — not a run-tier classifier script. Every other issue keeps the default: every reviewer, on every issue, runs on a different, non-weaker model than the implementer. Full mechanics: `agents/orchestrator.md` § "Model policy".
 
-A reviewer agent's prompt must carry no task-specific bias: it receives only the artifact under review and the relevant standard. The spawner must never state what the artifact is trying to accomplish, never express any expectation about the outcome, and never pre-answer anticipated objections.
+A reviewer agent's prompt must carry no task-specific bias: it receives the artifact under review, the staged diff, and the relevant standard. The spawner must never state what the artifact is trying to accomplish, never express any expectation about the outcome, and never pre-answer anticipated objections.
 
 ---
 

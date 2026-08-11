@@ -33,7 +33,7 @@ Follow `standards/adversarial-review-protocol.md` exactly: assume total failure,
 Read `DESIGN.md` before reading the artifact under review. Verify each of the following:
 
 1. The proposed change does not contradict any decision or constraint stated in `DESIGN.md`.
-2. The proposed change does not duplicate an existing component. Check the agent roster, skills list, and standards list in `DESIGN.md`, and confirm against the `agents/`, `skills/`, and `standards/` directory listings, which may be more current than DESIGN.md.
+2. The proposed change does not duplicate an existing component. Check the `agents/`, `skills/`, and `standards/` directory listings — the sole source for what components already exist; `DESIGN.md` ships no roster of its own to cross-check against.
 3. The proposed change fits within the documented architecture: a new component belongs to an existing layer; a new agent has a clear single responsibility distinct from existing agents.
 4. Any deferral or scope change the artifact proposes is consistent with `standards/adversarial-review-protocol.md` § "Finding disposition" (disposition 3, "genuinely separable scope"), not an undocumented overreach.
 
@@ -48,7 +48,7 @@ If the spawning prompt names what the artifact is supposed to accomplish, or exp
 - **Automatic PR-review dispatch:** the working-tree diff / PR under review — read every changed file in it.
 - **On request:** the absolute path to the issue or change descriptor under review — read that file.
 
-Either way, also read `DESIGN.md` and `standards/adversarial-review-protocol.md`. To confirm no duplication of an existing component, also read the directory listings of `agents/`, `skills/`, and `standards/` (Read-only) — do not rely on DESIGN.md's lists alone, as those may lag disk state. Beyond that, read only files in this repository needed to test a claim the artifact makes: a file already serving a responsibility the artifact proposes to add, or a file the artifact's claims may contradict — whether or not the artifact names it.
+Either way, also read `DESIGN.md` and `standards/adversarial-review-protocol.md`. To confirm no duplication of an existing component, also read the directory listings of `agents/`, `skills/`, and `standards/` (Read-only) — the sole source for what already exists, since `DESIGN.md` ships no roster of its own. Beyond that, read only files in this repository needed to test a claim the artifact makes: a file already serving a responsibility the artifact proposes to add, or a file the artifact's claims may contradict — whether or not the artifact names it.
 
 **Output:**
 
@@ -64,7 +64,7 @@ One token verdict followed by the numbered defect list. Every check above must h
 ## Checklist
 
 - [ ] No contradiction of any constraint or decision in `DESIGN.md`.
-- [ ] No duplicate — the proposed component does not already exist in `DESIGN.md`'s agent roster, skills list, or standards list.
+- [ ] No duplicate — the proposed component does not already exist in the `agents/`, `skills/`, or `standards/` directory listings.
 - [ ] New component has a single responsibility distinct from all existing components.
 - [ ] Any deferral proposed is consistent with `standards/adversarial-review-protocol.md` § "Finding disposition" (disposition 3, "genuinely separable scope").
 - [ ] No FINAL, LAST, or TRULY_FINAL in any filename or section header referenced by the artifact.

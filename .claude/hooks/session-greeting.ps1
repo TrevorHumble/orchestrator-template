@@ -12,11 +12,16 @@ try {
   if (-not $top) { exit 0 }
 
   # 1. Arm the commit-msg hook if dormant (local git config, idempotent).
+  #    tools/setup-hooks.ps1 stays the single owner of the `git config
+  #    core.hooksPath` call -- dot-sourced here exactly as setup.ps1 does it,
+  #    so this hook and setup.ps1 cannot silently disagree about how hooks
+  #    get armed. Output is discarded: this hook's only valid stdout is the
+  #    JSON systemMessage written at the end.
   $hookFile = Join-Path $top '.githooks/commit-msg'
   $hp = "$(& git -C $top config --get core.hooksPath)".Trim()
   if ($hp -ne '.githooks' -and (Test-Path $hookFile)) {
-    & git -C $top config core.hooksPath .githooks 2>$null
-    $hp = '.githooks'
+    . (Join-Path $top 'tools/setup-hooks.ps1') *> $null
+    $hp = "$(& git -C $top config --get core.hooksPath)".Trim()
   }
   $hookOn = ($hp -eq '.githooks' -and (Test-Path $hookFile))
 
@@ -25,7 +30,7 @@ try {
   $idNote = if ($haveEmail) { '' } else { ' Set your git name/email before your first commit.' }
 
   if ($hookOn) {
-    $msg = "Gates armed: the issue-reference commit-msg hook is active, goal gate + loop gate loaded. You're protected -- direct away.$idNote"
+    $msg = "Gates armed: the issue-reference commit-msg hook is active, goal gate + loop gate loaded. You're covered -- go ahead.$idNote"
   } else {
     $msg = "Goal gate + loop gate loaded, but the commit-msg hook file is missing -- check .githooks/commit-msg, or run: powershell -ExecutionPolicy Bypass -File tools/setup-hooks.ps1"
   }

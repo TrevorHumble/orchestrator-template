@@ -41,8 +41,8 @@ GitHub every time.
      only when their `Files:` sets are disjoint AND neither depends on the other; state this
      rule plainly so the reader can re-derive it, not just repeat the epic's tag.
    - **Merge policy** — do not restate it. Point to it:
-     See: `DESIGN.md` for the merge policy, and `CLAUDE.md` for the pipeline gate order (issue
-     review → implement → PR review → commit/PR).
+     See: `CLAUDE.md` § "How work flows: the orchestrator pipeline" for the merge conditions and
+     the pipeline gate order (issue review → implement → PR review → commit/PR).
 
 ## Why board-derived, not stored
 

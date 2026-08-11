@@ -1,15 +1,24 @@
-# apply-branch-protection.ps1 -- require main to be up to date before merge.
+# apply-branch-protection.ps1 -- require a green pull request before merging to main.
 #
 # WHAT: PUTs GitHub branch protection onto `main` requiring a pull request,
-# three named status checks, and required_status_checks.strict = true
-# (GitHub's "require branches to be up to date before merging").
+# three named status checks, and required_status_checks.strict = false
+# (GitHub's "require branches to be up to date before merging" stays OFF, as
+# shipped -- see below).
 #
-# WHY: two PRs can each go green against an older `main`, then both merge close
-# together. The second merge lands without ever running CI against the tree
-# that includes the first merge's changes -- `main` ends up in a state CI never
-# actually checked. `strict = true` closes that: a branch that has fallen
-# behind `main` must update and re-run CI before GitHub will allow the merge,
-# serializing concurrent merges through CI instead of racing them.
+# WHY (strict = false, as shipped): two PRs can each go green against an older
+# `main`, then both merge close together. The second merge lands without ever
+# running CI against the tree that includes the first merge's changes -- `main`
+# ends up in a state CI never actually checked. Setting `strict = true` would
+# close that race by forcing a branch that has fallen behind `main` to update
+# and re-run CI before GitHub allows the merge, serializing concurrent merges
+# through CI instead of racing them -- but this tool ships that switch OFF by
+# default. On a low-concurrency repo (few PRs merging close together) the race
+# is rare, and `strict = true` costs a re-run-CI round trip on every merge that
+# has fallen even one commit behind, which is friction paid on every merge for
+# a race that is the exception, not the rule. A project that wants the
+# stricter semantics anyway flips `strict` to `$true` below -- see
+# `PROJECT-SETUP.md` § "Fill in the blanks" item 13, the opt-in for this exact
+# switch.
 #
 # The three required checks are the real, observed check-run names on `main`
 # (confirmed via `gh api repos/<slug>/commits/main/check-runs`), not job names
