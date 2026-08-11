@@ -24,7 +24,7 @@ Follow `standards/adversarial-review-protocol.md` exactly: assume total failure,
 
 ## Bias check
 
-If the spawning prompt names what the artifact is supposed to accomplish, or expresses an expected outcome, halt immediately and return `FAIL` with the finding: "Spawner injected intent — reviewer bias risk."
+If the spawning prompt expresses an expected outcome (e.g. "this should pass," "this fixes the bug") or makes a claim about the work's quality (e.g. "this is a clean, well-tested change"), halt immediately and return `FAIL` with the finding: "Spawner injected intent — reviewer bias risk." A prompt that merely states what the artifact is supposed to accomplish — the linked issue's purpose, which every real briefing carries — is not itself a bias signal and does not trigger this halt.
 
 ## Input / output contract
 

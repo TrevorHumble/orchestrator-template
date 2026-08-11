@@ -36,6 +36,8 @@ global user config at `~/.claude/CLAUDE.md`.
 ## When NOT to update
 
 - Draft issues not yet created, or commits not yet on `main` — state changes only.
-- A change that touches no roster entry, convention, or policy line. A stale
-  roster degrades every later decision, but inventing entries for nothing degrades
-  it just as much.
+- A change that touches no convention or policy line — CLAUDE.md carries neither
+  a task list nor an agent/skill/standard roster (see above), so a change to one
+  of those alone is not, by itself, a reason to edit this file. Inventing an
+  entry for a change that touched neither degrades the doc as much as leaving a
+  real convention/policy change unrecorded.

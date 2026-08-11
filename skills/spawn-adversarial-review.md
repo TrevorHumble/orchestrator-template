@@ -36,13 +36,17 @@ Protocol: standards/adversarial-review-protocol.md
 Artifact(s) under review (complete list — anything missing from the artifact
 itself is a finding):
 - <path to artifact>
-- the staged diff, tree oid <oid>
+- <staged diff, tree oid <oid> — code review spawns only; omit this line
+  entirely for an issue-review spawn, which has no diff to stage>
 
-Every code review spawn requires the staged diff. A spawn that supplies only
-an artifact path with no diff is an incomplete spawn, not a smaller one —
+Every code review spawn (PR review, design-philosophy, architecture, security)
+requires the staged diff. A code review spawn that supplies only an artifact
+path with no diff is an incomplete spawn, not a smaller one —
 `agents/reviewer-design-philosophy.md` halts with FAIL when no diff is
 supplied, so the spawner must always capture and include the diff (e.g. via
-`git diff --cached` or `git show <tree-oid>`) before spawning.
+`git diff --cached` or `git show <tree-oid>`) before spawning. An issue-review
+spawn (`agents/reviewer-issue.md`) has no diff at that point in the pipeline —
+the issue file itself is the only artifact — and correctly omits the diff line.
 
 Return your verdict in the output format your agent definition specifies
 (verdict token plus numbered defect list with severity and file:line evidence).

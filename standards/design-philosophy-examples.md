@@ -4,7 +4,7 @@
 
 Each section: a `Flag` block (a **hypothetical counter-design** in a generic HTTP service's idiom — the shape a well-designed codebase avoids; its file and field names are illustrative, not any real app's schema), a `Clean` block (the corrected shape), and a `Not a finding:` guard naming a nearby pattern that does NOT qualify.
 
-The worked examples below share one running scenario: an HTTP service with a `store` module (owns persistence) and a `formatter` module (owns output shape).
+The worked examples below share one running scenario: an HTTP service with a `store` module (owns persistence).
 
 ---
 

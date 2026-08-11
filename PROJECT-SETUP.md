@@ -57,9 +57,9 @@ you pick).
    for now since the list is empty). `tests/classify-dep-pr.test.js`'s `FILL:` is a code comment
    pointing at the same list — no edit needed there; its kept test cases are already independent of
    the list's contents.
-5. **Doc-currency trigger surface — `agents/orchestrator.md`.** Both `FILL:` markers name this
-   project's core data/routing/service-layer source paths — the surface that, when touched by a diff,
-   spawns the `doc-currency` step to check `DESIGN.md`/`README.md` against the change.
+5. **Doc-currency trigger surface — `agents/orchestrator.md`.** Its one `FILL:` marker (§ "Doc-currency
+   step") names this project's core data/routing/service-layer source paths — the surface that, when
+   touched by a diff, spawns the `doc-currency` step to check `DESIGN.md`/`README.md` against the change.
 6. **Sonnet-tier eligibility gates — `standards/issue-standards.md`.** Gate (a) names any
    specially-gated or frozen surface this project defines in `CLAUDE.md` (if none, say so explicitly
    — do not leave the marker unresolved). Gate (b) names this project's critical-path list (auth,

@@ -40,7 +40,7 @@ Touches: <file paths or artifacts modified>
 The plan must be unambiguous at the level of a weak model. If a step says "do the thing," rewrite it. Each step names what to create, read, or write and where.
 
 **Example plan step, before:** "2. Update the upload handling to reject bad files."
-**After:** "2. In `src/services/uploads.js`, in the file-type validation callback, reject any file whose MIME type is not a key of `ALLOWED_MIME_TO_EXT` by calling the callback with an error whose message names the rejected type."
+**After:** "2. In `e.g. src/services/uploads.js`, in the file-type validation callback, reject any file whose MIME type is not a key of `ALLOWED_MIME_TO_EXT` by calling the callback with an error whose message names the rejected type."
 The before step forces the implementer to decide which file, which mechanism, and what "bad" means; the after step decides all three.
 
 ## Creating the GitHub issue
