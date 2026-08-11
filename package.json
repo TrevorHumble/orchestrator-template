@@ -1,0 +1,29 @@
+{
+  "name": "orchestrator-template",
+  "version": "1.0.0",
+  "description": "A self-enforcing AI-built project template: an issue-to-PR governance pipeline with adversarial review gates and enforcement hooks, ready to clone.",
+  "private": true,
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "preview": "FILL: the project's preview-server command, e.g. npm run preview",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix --max-warnings=0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@vitest/coverage-v8": "^4.1.10",
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.6",
+    "vitest": "^4.1.9"
+  }
+}

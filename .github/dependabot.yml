@@ -1,0 +1,28 @@
+version: 2
+updates:
+  # Keep CI's GitHub Actions patched and pinned.
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    groups:
+      actions-all:
+        patterns:
+          - '*'
+
+  # Keep npm dependencies patched.
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 10
+    groups:
+      prod-deps:
+        dependency-type: 'production'
+        update-types:
+          - 'minor'
+          - 'patch'
+        # FILL: list this project's critical prod deps here, and mirror them
+        # in CLAUDE.md and tools/classify-dep-pr-core.ps1.
+      dev-deps:
+        dependency-type: 'development'

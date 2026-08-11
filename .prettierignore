@@ -1,0 +1,10 @@
+# Generated / vendored / runtime
+node_modules/
+data/
+coverage/
+
+# Prettier does not safely format these file types -- kept as a
+# forward-looking pattern for whatever a consumer's tree adds.
+*.svg
+*.ps1
+.githooks/

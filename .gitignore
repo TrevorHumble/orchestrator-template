@@ -1,0 +1,26 @@
+# .gitignore
+
+# Installed packages
+node_modules/
+
+# A consumer's live application runtime state (database, uploads, generated
+# exports, local secrets) -- never commit real user data.
+data/
+
+# Environment secrets
+.env
+
+# Local enforcement state, per working copy -- never commit:
+#  - .review_state/ : visual-approval evidence + commit-gate verdicts (a committed or forged verdict defeats the gate)
+#  - .run_state/    : timed-run + loop-gate state (machine-local run.json / STOP sentinel)
+.review_state/
+.run_state/
+
+# OS / editor noise
+Thumbs.db
+.DS_Store
+*.log
+npm-debug.log*
+
+# Test coverage output
+coverage/

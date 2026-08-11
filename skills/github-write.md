@@ -1,0 +1,83 @@
+---
+name: github-write
+description: >-
+  How to create/update GitHub issues and commit changes in this project using git
+  and the GitHub CLI (ship flow: branch, then pull request, then merge on green CI —
+  see agents/orchestrator.md). Triggers: "create an issue", "commit this", "push to
+  GitHub", "open a PR", "close the issue", any task that writes to git or GitHub
+  for this project.
+---
+
+# github-write
+
+## Critical: resolve `gh` before using it
+
+`gh` may or may not be on `PATH`, depending on the host. Resolve it once via `tools/gh.ps1`'s
+`Get-GhPath` rather than hard-coding a path:
+
+```powershell
+. tools/gh.ps1
+& (Get-GhPath) <subcommand>
+```
+
+The remote is this project's own GitHub repo (set when you created it from the template). `gh` commands default to it — you rarely need `--repo`.
+
+## GitHub is the single source of truth — keep issues in sync
+
+Every issue file `data/wip-issues/<N>-slug.md` has a matching GitHub issue, and **the GitHub issue owns the
+status** (open/closed/labels). The file is the detail; the board is the state. The pipeline keeps them
+equal — see DESIGN.md "Source of truth". The sync rule:
+
+- **On issue creation** → `gh issue create` (title `#NNNN <short title>`, label by tier: `ready` /
+  `backlog` / `low priority`). The issue body can summarize and link the file.
+- **On merge to `main` (via pull request)** → `gh issue close` the matching card, referencing the commit.
+- **On graduation/supersession** → update the card (re-label, or close with a pointer to the successor).
+- Never leave the board disagreeing with the issue files / BUILDLOG; the orchestrator's own
+  close-out step keeps them in sync as part of merging a PR — there is no separate reviewer
+  gate for board drift.
+
+```powershell
+& (Get-GhPath) issue create `
+  --title "#NNNN Short title" `
+  --label "ready" `
+  --body @'
+Tracks data/wip-issues/<N>-slug.md (canonical detail in the repo).
+
+## Summary
+...
+'@
+```
+
+## Committing
+
+```powershell
+git add <specific files>   # never git add -A blindly
+git commit -m @'
+Short imperative summary
+
+Co-Authored-By: <committing model> <noreply@anthropic.com>
+'@
+```
+
+Run `git status` before staging to avoid committing `.env` or large binaries.
+
+## Opening a PR
+
+```powershell
+git push -u origin <branch>
+& (Get-GhPath) pr create `
+  --title "Short title" `
+  --body @'
+## Summary
+- ...
+
+## Test plan
+- [ ] ...
+'@
+```
+
+## Conventions
+
+- No FINAL / LAST / TRULY_FINAL in branch names or commit messages.
+- Prefer specific file staging over `git add .`.
+- PowerShell line continuation: backtick `` ` ``, not `\`.
