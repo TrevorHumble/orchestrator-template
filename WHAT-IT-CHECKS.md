@@ -10,10 +10,12 @@ what it cannot check, where you remain the eye after the fact.
 When all checks pass, these things have been confirmed automatically, without anyone reading the
 code:
 
-**The code is checked for cleanliness on every push.**
+**The code is checked for cleanliness on every push to `main`, every pull request, and every
+merge-queue entry.**
 Two tools run in GitHub's CI system: `eslint` scans each change for sloppy or risky code patterns,
-and `prettier` checks that formatting is consistent. These run automatically on every push and every
-pull request.
+and `prettier` checks that formatting is consistent. These run automatically on all three of those. They do not run on a push to any other branch:
+once that branch is opened as a pull request, its current head commit is checked, and every commit
+pushed to it afterward gets its own pull-request run in turn.
 
 **The working pieces are tested against known correct answers, wherever a test exists.**
 The test suite (powered by `vitest`) runs on every build. Where a test asserts a specific expected

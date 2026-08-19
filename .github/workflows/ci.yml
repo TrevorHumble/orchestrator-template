@@ -2,16 +2,25 @@ name: CI
 
 on:
   push:
-    branches-ignore: ['gh-readonly-queue/**']
+    branches: [main]
   pull_request:
   merge_group:
+
+# Why the key is the pull-request number and not the branch name, and why
+# every other event gets a group of its own: DESIGN.md, "When CI runs, and on
+# whose hardware".
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    # FILL: set the CI_RUNNER repository variable to target self-hosted
+    # hardware; see PROJECT-SETUP.md item 19 before enabling it on a public repo.
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -25,7 +34,7 @@ jobs:
         run: npm run format:check
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7

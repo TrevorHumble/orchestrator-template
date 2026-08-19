@@ -175,3 +175,46 @@ gate actually holds.
 not from a local hook — slower feedback, by one push-and-wait cycle, than a pre-commit hook would
 give. This is accepted because CI feedback within a few minutes is cheap relative to the maintenance
 cost and false confidence of a second, bypassable, locally-drifting copy of the same checks.
+
+## When CI runs, and on whose hardware
+
+**Decision.** The CI workflow runs on a push to the default branch, on every pull request, and on
+every merge-queue entry, and no longer on a push to any other branch. Pull-request runs for one pull
+request share a concurrency group keyed on the pull-request number, so a newer push cancels an older
+run. Every other event folds a per-run unique value into the group key, so those runs sit alone.
+Each job's runner label resolves from a `CI_RUNNER` repository variable with `ubuntu-latest` as the
+literal fallback.
+
+**Why the trigger narrowed.** The workflow previously fired on both `push` and `pull_request`, so a
+branch that was pushed and then opened as a pull request ran the whole job set twice for one commit.
+Public repositories get Actions minutes free, which hid the waste; a private one bills per
+machine-minute, and the duplication doubled the bill on every change. The merge gate is unaffected:
+`pull_request` still runs on every pull request, and branch protection still requires those checks.
+What is genuinely given up is a run for a commit pushed to a branch with no pull request open yet.
+That commit is checked as soon as the pull request exists.
+
+**Why the concurrency key is the pull-request number rather than the branch name.** Two open pull
+requests from different forks can carry the same head-branch name; `patch-1` is GitHub's own default
+for an edit made in the web UI. Keying the group on the branch name would put those unrelated pull
+requests in one group, and cancelling in progress would then cancel a stranger's required checks,
+leaving that pull request unmergeable with no event left to re-trigger CI. The pull-request number
+is unique per pull request and still equal across successive pushes to the same one, which is the
+behavior the cancellation is for.
+
+**Why non-pull-request runs each get their own group rather than an exemption from cancellation.**
+Setting `cancel-in-progress` false for those events would leave them in one shared group, which
+stops the cancelling but starts them queueing behind one another. Folding a per-run unique value
+into the group key gives each run a group of its own, so it is neither cancelled nor serialized.
+
+**What this trades away.** A downstream project that enables GitHub's merge queue still gets two
+runs for a queued commit: one for the `merge_group` event, and one for the `push` after it
+fast-forwards onto the default branch. That pair is accepted here. The template configures no merge
+queue, and the second run is the record of what actually shipped.
+
+**Why the runner is a variable rather than a hard-coded label.** A project that would rather spend
+its own hardware than GitHub's minutes should not have to edit each job. GitHub does not expose the
+`env` context to `runs-on`, so a repository variable with a literal fallback is the mechanism that
+fits. The fallback matters more than the switch: an unconfigured downstream repository behaves
+exactly as it did before. The security precondition is stated where the variable is set,
+`PROJECT-SETUP.md` item 19, because a self-hosted runner on a public repository executes a fork's
+pull request on the runner host.
