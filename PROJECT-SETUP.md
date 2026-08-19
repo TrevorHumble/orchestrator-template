@@ -103,6 +103,15 @@ you pick).
     with a `FILL:` marker; the value must name the same directories `.gitignore` actually ignores
     (`data/` is the template's own placeholder pattern there) — the two must agree, since one is the
     stated rule and the other is the mechanism that enforces it.
+19. **CI runner choice — `.github/workflows/ci.yml`.** Its `runs-on` lines resolve from the
+    `CI_RUNNER` repository variable, falling back to `ubuntu-latest` when the variable is unset, so
+    an unconfigured downstream repository keeps today's GitHub-hosted behavior with no edit needed.
+    Set `CI_RUNNER` to a self-hosted runner's label only after confirming the repository is
+    **private** (`gh repo view --json isPrivate` from the GitHub CLI, or Settings → General → Danger
+    Zone in the GitHub UI): a self-hosted runner must never be enabled on a public repository,
+    because a fork's pull request executes arbitrary code on the runner host, and GitHub documents
+    this as unsafe. The variable governs the CI workflow only. `.github/workflows/codeql.yml` and
+    `.github/workflows/issue-guard.yml` stay GitHub-hosted regardless of what `CI_RUNNER` is set to.
 
 ---
 
