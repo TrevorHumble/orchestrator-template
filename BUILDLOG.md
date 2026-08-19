@@ -30,4 +30,4 @@ automatic"), and are not counted toward the architectural-audit threshold above.
 
 ---
 
-_(no entries yet)_
+- 2026-08-18 - #4 Stop CI running every change twice and let it run on owned hardware: push narrowed to the default branch, concurrency keyed on the pull-request number, runs-on resolved from CI_RUNNER with an ubuntu-latest fallback, setup item 19 and a DESIGN.md ADR added (d81ea66, PR #5).
